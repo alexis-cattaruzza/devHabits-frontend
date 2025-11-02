@@ -1,0 +1,63 @@
+<!-- src/app/features/dashboard/dashboard/dashboard.component.html -->
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1>Welcome back, {{ currentUser?.firstName || currentUser?.username }}! 👋</h1>
+      <button mat-raised-button color="warn" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Logout
+      </button>
+    </div>
+  </header>
+
+  <div class="dashboard-content">
+    <mat-card class="user-info-card">
+      <mat-card-header>
+        <mat-card-title>Your Profile</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Email:</span>
+            <span class="value">{{ currentUser?.email }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Username:</span>
+            <span class="value">{{ currentUser?.username }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Level:</span>
+            <span class="value">{{ currentUser?.level }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Total XP:</span>
+            <span class="value">{{ currentUser?.totalXp }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Current Streak:</span>
+            <span class="value">{{ currentUser?.currentStreak }} days 🔥</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Longest Streak:</span>
+            <span class="value">{{ currentUser?.longestStreak }} days 🏆</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="coming-soon-card">
+      <mat-card-header>
+        <mat-card-title>🚀 Coming Soon</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul>
+          <li>✅ Create and manage habits</li>
+          <li>📊 Track your progress with charts</li>
+          <li>🏆 Unlock achievements</li>
+          <li>🔗 GitHub integration</li>
+          <li>👥 Leaderboard with friends</li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

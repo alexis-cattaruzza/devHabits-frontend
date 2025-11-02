@@ -1,0 +1,71 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Welcome Back! 👋</h1>
+      <p>Sign in to continue tracking your habits</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <div *ngIf="errorMessage" class="alert alert-error">
+        <span class="material-icons">error</span>
+        {{ errorMessage }}
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email or Username</mat-label>
+        <input
+          matInput
+          formControlName="emailOrUsername"
+          placeholder="john@example.com or johndoe"
+          autocomplete="username"
+        />
+        <mat-icon matPrefix>person</mat-icon>
+        <mat-error *ngIf="emailOrUsername?.hasError('required')">
+          Email or username is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="hidePassword ? 'password' : 'text'"
+          formControlName="password"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+        />
+        <mat-icon matPrefix>lock</mat-icon>
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (click)="hidePassword = !hidePassword"
+        >
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <mat-error *ngIf="password?.hasError('required')">
+          Password is required
+        </mat-error>
+        <mat-error *ngIf="password?.hasError('minlength')">
+          Password must be at least 8 characters
+        </mat-error>
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        class="submit-button"
+        [disabled]="loginForm.invalid || isLoading"
+      >
+        <span *ngIf="!isLoading">Sign In</span>
+        <mat-spinner *ngIf="isLoading" diameter="24"></mat-spinner>
+      </button>
+
+      <div class="register-link">
+        Don't have an account?
+        <a routerLink="/auth/register">Sign up</a>
+      </div>
+    </form>
+  </div>
+</div>
