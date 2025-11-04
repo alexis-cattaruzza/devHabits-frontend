@@ -119,3 +119,21 @@
     padding: 0 1rem;
   }
 }
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+}

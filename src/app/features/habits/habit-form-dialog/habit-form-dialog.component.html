@@ -1,0 +1,162 @@
+<h2 mat-dialog-title>{{ title }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="habitForm" class="habit-form">
+    <!-- Error Alert -->
+    <div *ngIf="errorMessage" class="alert alert-error">
+      <mat-icon>error</mat-icon>
+      {{ errorMessage }}
+    </div>
+
+    <!-- Name Field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Habit Name</mat-label>
+      <input
+        matInput
+        formControlName="name"
+        placeholder="e.g., Daily Code Practice"
+        maxlength="200"
+      />
+      <mat-hint align="end">{{ name?.value?.length || 0 }}/200</mat-hint>
+      <mat-error *ngIf="name?.hasError('required')">
+        Habit name is required
+      </mat-error>
+      <mat-error *ngIf="name?.hasError('minlength')">
+        Name must be at least 3 characters
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Description Field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description (Optional)</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        placeholder="Describe your habit..."
+        rows="3"
+        maxlength="1000"
+      ></textarea>
+      <mat-hint align="end">{{ description?.value?.length || 0 }}/1000</mat-hint>
+    </mat-form-field>
+
+    <!-- Category & Frequency Row -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="category">
+          <mat-option *ngFor="let cat of categories" [value]="cat">
+            {{ categoryLabels[cat] }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Frequency</mat-label>
+        <mat-select formControlName="frequency">
+          <mat-option *ngFor="let freq of frequencies" [value]="freq">
+            {{ frequencyLabels[freq] }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Target Count -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Target Count</mat-label>
+      <input
+        matInput
+        type="number"
+        formControlName="targetCount"
+        min="1"
+        max="100"
+      />
+      <mat-hint>How many times per frequency period?</mat-hint>
+      <mat-error *ngIf="targetCount?.hasError('min')">
+        Minimum value is 1
+      </mat-error>
+      <mat-error *ngIf="targetCount?.hasError('max')">
+        Maximum value is 100
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Icon Selection -->
+    <div class="selection-section">
+      <label class="section-label">Choose an Icon</label>
+      <div class="icon-grid">
+        <button
+          type="button"
+          class="icon-button"
+          *ngFor="let iconOption of icons"
+          [class.selected]="icon?.value === iconOption"
+          (click)="selectIcon(iconOption)"
+        >
+          {{ iconOption }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Color Selection -->
+    <div class="selection-section">
+      <label class="section-label">Choose a Color</label>
+      <div class="color-grid">
+        <button
+          type="button"
+          class="color-button"
+          *ngFor="let colorOption of colors"
+          [style.background-color]="colorOption"
+          [class.selected]="color?.value === colorOption"
+          (click)="selectColor(colorOption)"
+        >
+          <mat-icon *ngIf="color?.value === colorOption">check</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="preview-section">
+      <label class="section-label">Preview</label>
+      <div class="habit-preview" [style.border-left-color]="color?.value">
+        <span class="preview-icon">{{ icon?.value }}</span>
+        <div class="preview-content">
+          <h4>{{ name?.value || 'Habit Name' }}</h4>
+          <span class="preview-category">{{ getCategoryLabel(category?.value) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reminder (Optional) -->
+    <div class="reminder-section">
+      <mat-slide-toggle formControlName="reminderEnabled">
+        Enable Daily Reminder
+      </mat-slide-toggle>
+
+      <mat-form-field 
+        appearance="outline" 
+        class="full-width"
+        *ngIf="habitForm.get('reminderEnabled')?.value"
+      >
+        <mat-label>Reminder Time</mat-label>
+        <input
+          matInput
+          type="time"
+          formControlName="reminderTime"
+        />
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="isLoading">
+    Cancel
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="habitForm.invalid || isLoading"
+  >
+    <span *ngIf="!isLoading">{{ submitButtonText }}</span>
+    <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+  </button>
+</mat-dialog-actions>

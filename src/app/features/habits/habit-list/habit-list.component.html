@@ -1,0 +1,39 @@
+<div class="habits-container">
+  <div class="habits-header">
+    <h1>My Habits 🎯</h1>
+    <button mat-raised-button color="primary" (click)="onCreateHabit()">
+      <mat-icon>add</mat-icon>
+      New Habit
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading your habits...</p>
+  </div>
+
+  <div *ngIf="!isLoading && errorMessage" class="error-message">
+    <mat-icon>error</mat-icon>
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div *ngIf="!isLoading && habits.length === 0 && !errorMessage" class="empty-state">
+    <mat-icon>sentiment_satisfied</mat-icon>
+    <h2>No habits yet!</h2>
+    <p>Create your first habit to start tracking your progress.</p>
+    <button mat-raised-button color="primary" (click)="onCreateHabit()">
+      <mat-icon>add</mat-icon>
+      Create Your First Habit
+    </button>
+  </div>
+
+  <div *ngIf="!isLoading && habits.length > 0" class="habits-grid">
+    <app-habit-card
+      *ngFor="let habit of habits"
+      [habit]="habit"
+      (checkIn)="onCheckIn($event)"
+      (edit)="onEditHabit($event)"
+      (delete)="onDeleteHabit($event)"
+    ></app-habit-card>
+  </div>
+</div>
