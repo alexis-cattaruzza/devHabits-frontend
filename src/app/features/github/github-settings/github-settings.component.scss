@@ -1,241 +1,973 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+// ============================================
+// GITHUB SETTINGS - PROFESSIONAL GAMING STYLE
+// ============================================
+
 .github-settings-container {
-  max-width: 1200px;
+  max-width: $breakpoint-xl;
   margin: 0 auto;
-  padding: 24px;
+  padding: $spacing-2xl;
+  min-height: calc(100vh - 64px);
+  background: linear-gradient(135deg, rgba($primary-color, 0.03) 0%, rgba($secondary-color, 0.03) 100%);
+  @include custom-scrollbar;
 }
 
+// ============================================
+// HEADER SECTION
+// ============================================
 .settings-header {
-  margin-bottom: 32px;
+  margin-bottom: $spacing-3xl;
+  text-align: center;
+  padding: $spacing-xl 0;
 
   h1 {
-    margin: 0 0 8px 0;
-    font-size: 32px;
-    font-weight: 600;
+    margin: 0 0 $spacing-md 0;
+    font-size: 48px;
+    font-weight: $font-extrabold;
+    @include gradient-text($primary-gradient);
+    text-shadow: 0 4px 12px rgba($primary-color, 0.2);
+    letter-spacing: -1px;
+    animation: fadeInDown 0.6s ease-out;
   }
 
   p {
     margin: 0;
-    color: #666;
-    font-size: 16px;
+    color: $text-secondary;
+    font-size: 20px;
+    font-weight: $font-medium;
+    animation: fadeInUp 0.6s ease-out 0.2s backwards;
   }
 }
 
+// ============================================
+// LOADING SECTION
+// ============================================
 .loading-section {
-  display: flex;
+  @include flex-center;
   flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  padding: 48px;
+  gap: $spacing-lg;
+  padding: $spacing-3xl;
   text-align: center;
+  animation: fadeIn 0.4s ease;
 
   p {
-    color: #666;
+    color: $text-secondary;
+    font-size: 16px;
+    font-weight: $font-medium;
   }
 }
 
+// ============================================
+// CONNECTION CARD - NOT CONNECTED
+// ============================================
 .connection-card {
-  max-width: 600px;
-  margin: 0 auto 24px;
+  @include card;
+  max-width: 800px;
+  margin: 0 auto $spacing-2xl;
+  background: $bg-card;
+  border: 3px solid transparent;
+  background-image:
+    linear-gradient($bg-card, $bg-card),
+    $primary-gradient;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: $shadow-xl, $shadow-primary;
+  animation: scaleIn 0.5s ease-out;
+  transition: all $transition-base;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: $shadow-2xl, $shadow-primary;
+  }
 
   mat-card-header {
-    margin-bottom: 16px;
+    margin-bottom: $spacing-xl;
+    padding: $spacing-xl;
+    background: linear-gradient(135deg, rgba($primary-color, 0.05) 0%, rgba($secondary-color, 0.05) 100%);
+    border-radius: $radius-lg;
+
+    mat-icon[mat-card-avatar] {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      @include gradient-text($primary-gradient);
+    }
+
+    mat-card-title {
+      font-size: 28px;
+      font-weight: $font-bold;
+      color: $primary-color;
+      margin-bottom: $spacing-xs;
+    }
+
+    mat-card-subtitle {
+      font-size: 16px;
+      color: $text-secondary;
+      font-weight: $font-medium;
+    }
+  }
+
+  mat-card-content {
+    padding: 0 $spacing-xl;
   }
 
   .benefits-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin: 24px 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: $spacing-lg;
+    margin: $spacing-xl 0;
 
     .benefit-item {
       display: flex;
-      align-items: center;
-      gap: 12px;
+      align-items: flex-start;
+      gap: $spacing-md;
+      padding: $spacing-lg;
+      background: linear-gradient(135deg, rgba($success, 0.08) 0%, rgba($success-dark, 0.05) 100%);
+      border-radius: $radius-lg;
+      border: 2px solid rgba($success, 0.2);
+      transition: all $transition-bounce;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: $success-gradient;
+        border-radius: $radius-full;
+      }
+
+      &:hover {
+        transform: translateX(8px) scale(1.02);
+        background: linear-gradient(135deg, rgba($success, 0.12) 0%, rgba($success-dark, 0.08) 100%);
+        box-shadow: $shadow-md, $shadow-success;
+        border-color: rgba($success, 0.4);
+      }
 
       mat-icon {
-        color: #4caf50;
+        color: $success;
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+        filter: drop-shadow(0 2px 4px rgba($success, 0.3));
       }
 
       span {
-        font-size: 15px;
+        font-size: 16px;
+        color: $text-primary;
+        font-weight: $font-semibold;
+        line-height: 1.6;
       }
     }
   }
 
   mat-card-actions {
-    padding: 16px;
-    display: flex;
-    justify-content: center;
+    padding: $spacing-xl;
+    @include flex-center;
 
     button {
+      background: $primary-gradient;
+      color: $white;
+      font-size: 18px;
+      font-weight: $font-bold;
+      padding: $spacing-lg $spacing-2xl;
+      border-radius: $radius-xl;
+      box-shadow: $shadow-lg, $shadow-primary;
+      transition: all $transition-bounce;
+      border: none;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-4px) scale(1.05);
+        box-shadow: $shadow-2xl, $shadow-primary;
+      }
+
+      &:active {
+        transform: translateY(-2px) scale(1.02);
+      }
+
       mat-icon {
-        margin-right: 8px;
+        margin-right: $spacing-sm;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
       }
     }
   }
 }
 
+// ============================================
+// CONNECTED SECTION
+// ============================================
 .connected-section {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: $spacing-2xl;
+  animation: fadeIn 0.6s ease;
 }
 
+// ============================================
+// PROFILE CARD - CONNECTED
+// ============================================
 .profile-card {
-  mat-card-header img {
-    border-radius: 50%;
+  @include card;
+  background: $bg-card;
+  border: 2px solid rgba($primary-color, 0.2);
+  box-shadow: $shadow-lg, $shadow-primary;
+  transition: all $transition-base;
+  animation: slideInLeft 0.5s ease-out;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-xl, $shadow-primary;
+    border-color: rgba($primary-color, 0.4);
+  }
+
+  mat-card-header {
+    padding: $spacing-xl;
+    background: linear-gradient(135deg, rgba($primary-color, 0.08) 0%, rgba($secondary-color, 0.05) 100%);
+    border-bottom: 2px solid rgba($primary-color, 0.15);
+    border-radius: $radius-lg $radius-lg 0 0;
+
+    img[mat-card-avatar] {
+      border-radius: $radius-full;
+      border: 4px solid $primary-color;
+      box-shadow: $shadow-md, 0 0 20px rgba($primary-color, 0.4);
+      width: 64px;
+      height: 64px;
+    }
+
+    mat-card-title {
+      font-size: 24px;
+      font-weight: $font-bold;
+      color: $primary-color;
+      margin-bottom: $spacing-xs;
+    }
+
+    mat-card-subtitle {
+      font-size: 15px;
+      color: $text-secondary;
+      font-weight: $font-medium;
+    }
+  }
+
+  mat-card-content {
+    padding: $spacing-xl;
   }
 
   .connection-info {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-top: 16px;
+    gap: $spacing-md;
 
     .info-item {
       display: flex;
       align-items: center;
-      gap: 8px;
-      color: #666;
+      gap: $spacing-md;
+      padding: $spacing-md $spacing-lg;
+      background: linear-gradient(135deg, rgba($primary-color, 0.05) 0%, rgba($primary-light, 0.03) 100%);
+      border-radius: $radius-lg;
+      border-left: 4px solid $primary-color;
+      color: $text-primary;
+      font-weight: $font-medium;
+      transition: all $transition-fast;
+
+      &:hover {
+        background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($primary-light, 0.06) 100%);
+        transform: translateX(4px);
+      }
 
       mat-icon {
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        color: $primary-color;
+      }
+    }
+  }
+
+  mat-card-actions {
+    padding: $spacing-xl;
+    border-top: 2px solid rgba($primary-color, 0.1);
+    @include flex-center;
+
+    button {
+      background: linear-gradient(135deg, rgba($danger, 0.1) 0%, rgba($danger-light, 0.2) 100%);
+      color: $danger;
+      font-weight: $font-bold;
+      border: 2px solid $danger;
+      padding: $spacing-md $spacing-xl;
+      border-radius: $radius-lg;
+      transition: all $transition-bounce;
+
+      &:hover:not(:disabled) {
+        background: $danger-gradient;
+        color: $white;
+        transform: translateY(-2px);
+        box-shadow: $shadow-md, $shadow-danger;
       }
     }
   }
 }
 
-.repositories-card,
-.events-card {
+// ============================================
+// REPOSITORIES CARD
+// ============================================
+.repositories-card {
+  @include card;
+  background: $bg-card;
+  border: 2px solid rgba($info, 0.2);
+  box-shadow: $shadow-lg, $shadow-info;
+  transition: all $transition-base;
+  animation: slideInUp 0.5s ease-out 0.1s backwards;
+
+  &:hover {
+    box-shadow: $shadow-xl, $shadow-info;
+    border-color: rgba($info, 0.4);
+  }
+
+  mat-card-header {
+    padding: $spacing-xl;
+    background: linear-gradient(135deg, rgba($info, 0.08) 0%, rgba($info-light, 0.1) 100%);
+    border-bottom: 2px solid rgba($info, 0.15);
+    border-radius: $radius-lg $radius-lg 0 0;
+
+    mat-icon[mat-card-avatar] {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: $info;
+      filter: drop-shadow(0 2px 8px rgba($info, 0.3));
+    }
+
+    mat-card-title {
+      font-size: 24px;
+      font-weight: $font-bold;
+      color: $info;
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+    }
+
+    mat-card-subtitle {
+      font-size: 15px;
+      color: $text-secondary;
+      font-weight: $font-medium;
+      margin-top: $spacing-xs;
+    }
+  }
+
+  mat-card-content {
+    padding: $spacing-xl;
+  }
+
   .repositories-actions {
-    margin-bottom: 24px;
+    margin-bottom: $spacing-xl;
+    @include flex-center;
+
+    button {
+      background: $info-gradient;
+      color: $white;
+      font-weight: $font-bold;
+      border: none;
+      padding: $spacing-md $spacing-xl;
+      border-radius: $radius-lg;
+      box-shadow: $shadow-md, $shadow-info;
+      transition: all $transition-bounce;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: $shadow-lg, $shadow-info;
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      mat-icon {
+        margin-right: $spacing-xs;
+      }
+    }
   }
 
   .empty-state {
-    display: flex;
+    @include flex-center;
     flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    padding: 48px;
+    gap: $spacing-lg;
+    padding: $spacing-3xl;
     text-align: center;
-    color: #999;
 
     mat-icon {
-      font-size: 64px;
-      width: 64px;
-      height: 64px;
-      color: #ddd;
+      font-size: 96px;
+      width: 96px;
+      height: 96px;
+      color: rgba($info, 0.3);
+      animation: float 3s ease-in-out infinite;
     }
 
     p {
       margin: 0;
-      font-size: 16px;
+      font-size: 20px;
+      font-weight: $font-bold;
+      color: $text-secondary;
     }
 
-    small {
-      font-size: 14px;
+    button {
+      margin-top: $spacing-md;
     }
   }
 
-  .repositories-list,
-  .events-list {
-    mat-list {
-      padding: 0;
-    }
-
-    mat-list-item {
-      border-bottom: 1px solid #eee;
-      min-height: 72px;
-
-      &:last-child {
-        border-bottom: none;
-      }
-    }
+  .repositories-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
   }
 }
 
+// ============================================
+// REPOSITORY ITEM
+// ============================================
 .repo-item {
-  mat-icon {
-    &.private {
-      color: #ff9800;
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-lg;
+  padding: $spacing-xl;
+  background: linear-gradient(135deg, rgba($info, 0.02) 0%, rgba($info-light, 0.05) 100%);
+  border: 2px solid rgba($info, 0.15);
+  border-radius: $radius-lg;
+  transition: all $transition-fast;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: $info-gradient;
+    border-radius: $radius-lg 0 0 $radius-lg;
+    opacity: 0;
+    transition: opacity $transition-fast;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, rgba($info, 0.08) 0%, rgba($info-light, 0.12) 100%);
+    border-color: rgba($info, 0.3);
+    transform: translateX(8px);
+    box-shadow: $shadow-md, $shadow-info;
+
+    &::before {
+      opacity: 1;
     }
+  }
+
+  .repo-icon {
+    flex-shrink: 0;
+    @include flex-center;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, rgba($info, 0.15) 0%, rgba($info-light, 0.2) 100%);
+    border-radius: $radius-lg;
+
+    mat-icon {
+      color: $info;
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+
+      &.private {
+        color: $warning;
+      }
+    }
+  }
+
+  .repo-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  .repo-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacing-md;
   }
 
   .repo-title {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: $spacing-md;
+    flex-wrap: wrap;
+
+    strong {
+      font-size: 18px;
+      font-weight: $font-bold;
+      color: $text-primary;
+    }
 
     .language-chip {
+      @include badge($info);
       font-size: 11px;
-      min-height: 20px;
-      padding: 0 8px;
+      min-height: 24px;
+      padding: $spacing-xs $spacing-sm;
+      font-weight: $font-bold;
+      background: $info-gradient;
+      color: $white;
+      box-shadow: $shadow-sm;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
   }
 
   .repo-description {
-    color: #666;
-    font-size: 14px;
+    color: $text-secondary;
+    font-size: 15px;
+    line-height: 1.7;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    font-weight: $font-medium;
+    margin-top: $spacing-xs;
+  }
+
+  .repo-actions {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-sm;
+    background: rgba($white, 0.5);
+    border-radius: $radius-md;
+
+    .tracking-label {
+      font-size: 13px;
+      font-weight: $font-semibold;
+      color: $text-muted;
+      white-space: nowrap;
+
+      &.tracking {
+        color: $success;
+      }
+    }
   }
 }
 
+// ============================================
+// EVENTS CARD
+// ============================================
+.events-card {
+  @include card;
+  background: $bg-card;
+  border: 2px solid rgba($secondary-color, 0.2);
+  box-shadow: $shadow-lg, $shadow-secondary;
+  transition: all $transition-base;
+  animation: slideInUp 0.5s ease-out 0.2s backwards;
+
+  &:hover {
+    box-shadow: $shadow-xl, $shadow-secondary;
+    border-color: rgba($secondary-color, 0.4);
+  }
+
+  mat-card-header {
+    padding: $spacing-xl;
+    background: linear-gradient(135deg, rgba($secondary-color, 0.08) 0%, rgba($secondary-light, 0.1) 100%);
+    border-bottom: 2px solid rgba($secondary-color, 0.15);
+    border-radius: $radius-lg $radius-lg 0 0;
+
+    mat-icon[mat-card-avatar] {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: $secondary-color;
+      filter: drop-shadow(0 2px 8px rgba($secondary-color, 0.3));
+    }
+
+    mat-card-title {
+      font-size: 24px;
+      font-weight: $font-bold;
+      color: $secondary-color;
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+    }
+
+    mat-card-subtitle {
+      font-size: 15px;
+      color: $text-secondary;
+      font-weight: $font-medium;
+      margin-top: $spacing-xs;
+    }
+  }
+
+  mat-card-content {
+    padding: $spacing-xl;
+  }
+
+  .empty-state {
+    @include flex-center;
+    flex-direction: column;
+    gap: $spacing-lg;
+    padding: $spacing-3xl;
+    text-align: center;
+
+    mat-icon {
+      font-size: 96px;
+      width: 96px;
+      height: 96px;
+      color: rgba($secondary-color, 0.3);
+      animation: float 3s ease-in-out infinite 0.5s;
+    }
+
+    p {
+      margin: 0;
+      font-size: 20px;
+      font-weight: $font-bold;
+      color: $text-secondary;
+    }
+
+    small {
+      font-size: 15px;
+      color: $text-muted;
+      font-weight: $font-medium;
+    }
+  }
+
+  .events-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+  }
+}
+
+// ============================================
+// EVENT ITEM
+// ============================================
 .event-item {
-  .event-icon-COMMIT {
-    color: #2196f3;
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-lg;
+  padding: $spacing-xl;
+  background: linear-gradient(135deg, rgba($secondary-color, 0.02) 0%, rgba($secondary-light, 0.05) 100%);
+  border: 2px solid rgba($secondary-color, 0.15);
+  border-radius: $radius-lg;
+  transition: all $transition-fast;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: $secondary-gradient;
+    border-radius: $radius-lg 0 0 $radius-lg;
+    opacity: 0;
+    transition: opacity $transition-fast;
   }
 
-  .event-icon-PULL_REQUEST {
-    color: #9c27b0;
+  &:hover {
+    background: linear-gradient(135deg, rgba($secondary-color, 0.08) 0%, rgba($secondary-light, 0.12) 100%);
+    border-color: rgba($secondary-color, 0.3);
+    transform: translateX(8px);
+    box-shadow: $shadow-md, $shadow-secondary;
+
+    &::before {
+      opacity: 1;
+    }
   }
 
-  .event-icon-CODE_REVIEW {
-    color: #ff9800;
+  .event-icon {
+    flex-shrink: 0;
+    @include flex-center;
+    width: 56px;
+    height: 56px;
+    border-radius: $radius-lg;
+    position: relative;
+
+    mat-icon {
+      font-size: 36px;
+      width: 36px;
+      height: 36px;
+    }
+
+    .event-icon-COMMIT {
+      color: $github-commit;
+      filter: drop-shadow(0 2px 6px rgba($github-commit, 0.4));
+    }
+
+    .event-icon-PULL_REQUEST {
+      color: $github-pr;
+      filter: drop-shadow(0 2px 6px rgba($github-pr, 0.4));
+    }
+
+    .event-icon-CODE_REVIEW {
+      color: $github-review;
+      filter: drop-shadow(0 2px 6px rgba($github-review, 0.4));
+    }
+
+    .event-icon-ISSUE {
+      color: $github-issue;
+      filter: drop-shadow(0 2px 6px rgba($github-issue, 0.4));
+    }
   }
 
-  .event-icon-ISSUE {
-    color: #f44336;
+  .event-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  .event-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacing-md;
+    flex-wrap: wrap;
+
+    .event-type {
+      font-size: 17px;
+      font-weight: $font-bold;
+      color: $primary-color;
+    }
+
+    .event-date {
+      @include badge($gray-400);
+      background: linear-gradient(135deg, rgba($gray-400, 0.15) 0%, rgba($gray-300, 0.1) 100%);
+      color: $text-muted;
+      font-size: 12px;
+      font-weight: $font-semibold;
+      white-space: nowrap;
+      padding: $spacing-xs $spacing-sm;
+    }
   }
 
   .event-details {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: $spacing-xs;
 
     .repo-name {
-      font-weight: 500;
-      color: #333;
+      font-weight: $font-bold;
+      color: $secondary-color;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: $spacing-xs;
+
+      &::before {
+        content: '📁';
+        font-size: 14px;
+      }
     }
 
     .event-message {
-      color: #666;
+      color: $text-secondary;
+      font-size: 15px;
+      line-height: 1.7;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      font-weight: $font-medium;
+    }
+  }
+}
+
+// ============================================
+// ANIMATIONS
+// ============================================
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+// ============================================
+// RESPONSIVE DESIGN
+// ============================================
+@include responsive(md) {
+  .github-settings-container {
+    padding: $spacing-lg;
+  }
+
+  .settings-header {
+    padding: $spacing-lg 0;
+
+    h1 {
+      font-size: 36px;
+    }
+
+    p {
+      font-size: 16px;
+    }
+  }
+
+  .connection-card {
+    margin-bottom: $spacing-lg;
+
+    .benefits-list {
+      grid-template-columns: 1fr;
+
+      .benefit-item {
+        padding: $spacing-md;
+
+        span {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .repo-item {
+    flex-direction: column;
+    gap: $spacing-md;
+
+    .repo-icon {
+      width: 40px;
+      height: 40px;
+
+      mat-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    .repo-actions {
+      width: 100%;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+
+  .event-item {
+    flex-direction: column;
+    gap: $spacing-md;
+
+    .event-icon {
+      width: 48px;
+      height: 48px;
+
+      mat-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    .event-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}
+
+@include responsive(sm) {
+  .github-settings-container {
+    padding: $spacing-md;
+  }
+
+  .settings-header {
+    margin-bottom: $spacing-lg;
+    padding: $spacing-md 0;
+
+    h1 {
+      font-size: 28px;
+    }
+
+    p {
       font-size: 14px;
     }
   }
 
-  .event-date {
-    color: #999;
-    font-size: 13px;
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 768px) {
-  .github-settings-container {
-    padding: 16px;
-  }
-
-  .settings-header {
-    h1 {
-      font-size: 24px;
-    }
-  }
-
-  .repo-item,
-  .event-item {
-    mat-list-item-meta {
-      margin-left: 8px;
+  .connection-card,
+  .profile-card,
+  .repositories-card,
+  .events-card {
+    mat-card-header,
+    mat-card-content,
+    mat-card-actions {
+      padding: $spacing-md;
     }
   }
 }

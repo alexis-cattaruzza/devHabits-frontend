@@ -101,28 +101,37 @@
         </div>
 
         <div *ngIf="!loadingRepositories && repositories.length > 0" class="repositories-list">
-          <mat-list>
-            <mat-list-item *ngFor="let repo of repositories" class="repo-item">
-              <mat-icon matListItemIcon [class.private]="repo.isPrivate">
+          <div class="repo-item" *ngFor="let repo of repositories">
+            <div class="repo-icon">
+              <mat-icon [class.private]="repo.isPrivate">
                 {{ repo.isPrivate ? 'lock' : 'folder_open' }}
               </mat-icon>
-              <div matListItemTitle class="repo-title">
-                <strong>{{ repo.repositoryName }}</strong>
-                <mat-chip *ngIf="repo.language" class="language-chip">{{ repo.language }}</mat-chip>
+            </div>
+
+            <div class="repo-content">
+              <div class="repo-header">
+                <div class="repo-title">
+                  <strong>{{ repo.repositoryName }}</strong>
+                  <mat-chip *ngIf="repo.language" class="language-chip">{{ repo.language }}</mat-chip>
+                </div>
               </div>
-              <div matListItemLine class="repo-description">
-                {{ repo.description || 'No description' }}
+
+              <div class="repo-description">
+                {{ repo.description || 'No description available' }}
               </div>
-              <div matListItemMeta>
-                <mat-slide-toggle
-                  [checked]="repo.isTracked"
-                  (change)="toggleRepositoryTracking(repo)"
-                  color="primary">
-                  {{ repo.isTracked ? 'Tracking' : 'Not tracking' }}
-                </mat-slide-toggle>
-              </div>
-            </mat-list-item>
-          </mat-list>
+            </div>
+
+            <div class="repo-actions">
+              <mat-slide-toggle
+                [checked]="repo.isTracked"
+                (change)="toggleRepositoryTracking(repo)"
+                color="primary">
+              </mat-slide-toggle>
+              <span class="tracking-label" [class.tracking]="repo.isTracked">
+                {{ repo.isTracked ? 'Tracking' : 'Not tracking' }}
+              </span>
+            </div>
+          </div>
         </div>
       </mat-card-content>
     </mat-card>
@@ -147,31 +156,36 @@
         </div>
 
         <div *ngIf="!loadingEvents && recentEvents.length > 0" class="events-list">
-          <mat-list>
-            <mat-list-item *ngFor="let event of recentEvents" class="event-item">
-              <mat-icon matListItemIcon [class]="'event-icon-' + event.eventType">
+          <div class="event-item" *ngFor="let event of recentEvents">
+            <div class="event-icon">
+              <mat-icon [class]="'event-icon-' + event.eventType">
                 {{ getEventIcon(event.eventType) }}
               </mat-icon>
-              <div matListItemTitle>
-                <strong>{{ eventTypeLabels[event.eventType] }}</strong>
+            </div>
+
+            <div class="event-content">
+              <div class="event-header">
+                <strong class="event-type">{{ eventTypeLabels[event.eventType] }}</strong>
+                <span class="event-date">{{ formatDate(event.createdAt) }}</span>
               </div>
-              <div matListItemLine class="event-details">
+
+              <div class="event-details">
                 <span class="repo-name">{{ event.repositoryName }}</span>
+
                 <span class="event-message" *ngIf="event.commitMessage">
-                  {{ event.commitMessage | slice:0:60 }}{{ event.commitMessage.length > 60 ? '...' : '' }}
+                  {{ event.commitMessage | slice:0:80 }}{{ event.commitMessage.length > 80 ? '...' : '' }}
                 </span>
+
                 <span class="event-message" *ngIf="event.pullRequestTitle">
-                  PR #{{ event.pullRequestNumber }}: {{ event.pullRequestTitle | slice:0:60 }}
+                  PR #{{ event.pullRequestNumber }}: {{ event.pullRequestTitle | slice:0:80 }}
                 </span>
+
                 <span class="event-message" *ngIf="event.issueTitle">
-                  Issue #{{ event.issueNumber }}: {{ event.issueTitle | slice:0:60 }}
+                  Issue #{{ event.issueNumber }}: {{ event.issueTitle | slice:0:80 }}
                 </span>
               </div>
-              <div matListItemMeta class="event-date">
-                {{ formatDate(event.createdAt) }}
-              </div>
-            </mat-list-item>
-          </mat-list>
+            </div>
+          </div>
         </div>
       </mat-card-content>
     </mat-card>

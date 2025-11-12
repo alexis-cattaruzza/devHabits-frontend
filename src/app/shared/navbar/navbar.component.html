@@ -11,6 +11,9 @@
       <span class="welcome-text">Welcome back, {{ currentUser?.firstName || currentUser?.username }}! 👋</span>
     </div>
 
+    <!-- Spacer to push content to the right -->
+    <div class="navbar-spacer"></div>
+
     <!-- Navigation Links -->
     <div class="navbar-nav">
       <button mat-button routerLink="/dashboard" routerLinkActive="active">
@@ -50,7 +53,7 @@
                 <mat-icon>stars</mat-icon>
                 Level {{ currentUser?.level }}
               </span>
-              <span class="stat-item">
+              <span class="stat-item streak">
                 <mat-icon>local_fire_department</mat-icon>
                 {{ currentUser?.currentStreak }} day streak
               </span>

@@ -1,5 +1,9 @@
 /* src/styles.scss - Global Styles */
 
+/* Design System */
+@import 'styles/variables';
+@import 'styles/mixins';
+
 /* Angular Material Theme */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
@@ -20,26 +24,9 @@ html, body {
 
 body {
   margin: 0;
-  background-color: #f7fafc;
-}
-
-/* Scrollbar Styles */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: $bg-secondary;
+  color: $text-primary;
+  @include custom-scrollbar;
 }
 
 /* Utilities */
