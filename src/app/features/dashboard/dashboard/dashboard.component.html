@@ -1,67 +1,257 @@
-<!-- src/app/features/dashboard/dashboard/dashboard.component.html -->
 <div class="dashboard-container">
-  <header class="dashboard-header">
-    <div class="header-content">
-      <div class="header-actions">
-        <button mat-raised-button color="primary" routerLink="/habits">
-          <mat-icon>playlist_add_check</mat-icon>
-          My Habits
-        </button>
-        <button mat-raised-button color="warn" (click)="logout()">
-          <mat-icon>logout</mat-icon>
-          Logout
-        </button>
-      </div>
-    </div>
-  </header>
 
-  <div class="dashboard-content">
-    <mat-card class="user-info-card">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading your dashboard...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage && !isLoading" class="error-container">
+    <mat-icon color="warn">error</mat-icon>
+    <p>{{ errorMessage }}</p>
+    <button mat-raised-button color="primary" (click)="refresh()">
+      Try Again
+    </button>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!isLoading && !errorMessage" class="dashboard-content">
+    
+    <!-- Stats Overview Grid -->
+    <div class="stats-grid">
+      <!-- Total Habits Card -->
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon" style="background-color: #667eea20;">
+            <mat-icon style="color: #667eea;">list</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ stats?.totalHabits || 0 }}</h3>
+            <p>Total Habits</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Active Habits Card -->
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon" style="background-color: #48bb7820;">
+            <mat-icon style="color: #48bb78;">check_circle</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ stats?.activeHabits || 0 }}</h3>
+            <p>Active Habits</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Completed Today Card -->
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon" style="background-color: #f6ad5520;">
+            <mat-icon style="color: #f6ad55;">today</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ stats?.completedToday || 0 }}</h3>
+            <p>Completed Today</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Current Max Streak Card -->
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon" style="background-color: #fc818120;">
+            <mat-icon style="color: #fc8181;">local_fire_department</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ stats?.currentMaxStreak || 0 }}</h3>
+            <p>Max Streak</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="progress-section">
+      <!-- Today's Progress -->
+      <mat-card class="progress-card">
+        <mat-card-header>
+          <mat-card-title>Today's Progress</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="progress-info">
+            <div class="progress-stats">
+              <span class="progress-percentage" 
+                    [style.color]="getCompletionRateColor(getTodayCompletionPercentage())">
+                {{ getTodayCompletionPercentage() }}%
+              </span>
+              <span class="progress-label">
+                {{ stats?.completedToday || 0 }} of {{ stats?.totalHabits || 0 }} completed
+              </span>
+            </div>
+            <mat-progress-bar 
+              mode="determinate" 
+              [value]="getTodayCompletionPercentage()"
+              [color]="getTodayCompletionPercentage() >= 80 ? 'primary' : 'accent'">
+            </mat-progress-bar>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Weekly/Monthly Stats -->
+      <mat-card class="stats-summary-card">
+        <mat-card-header>
+          <mat-card-title>Recent Activity</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="stats-summary">
+            <div class="summary-item">
+              <mat-icon>calendar_view_week</mat-icon>
+              <div>
+                <h4>{{ stats?.totalCompletionsThisWeek || 0 }}</h4>
+                <p>This Week</p>
+              </div>
+            </div>
+            <div class="summary-item">
+              <mat-icon>calendar_month</mat-icon>
+              <div>
+                <h4>{{ stats?.totalCompletionsThisMonth || 0 }}</h4>
+                <p>This Month</p>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- User Profile Card -->
+    <mat-card class="user-profile-card">
       <mat-card-header>
-        <mat-card-title>Your Profile</mat-card-title>
+        <div class="profile-header">
+          <div class="avatar-container">
+            <img *ngIf="currentUser?.avatarUrl" 
+                 [src]="currentUser?.avatarUrl" 
+                 alt="User avatar"
+                 class="user-avatar">
+            <div *ngIf="!currentUser?.avatarUrl" class="avatar-placeholder">
+              {{ (currentUser?.firstName?.[0] || currentUser?.username?.[0] || 'U') | uppercase }}
+            </div>
+          </div>
+          <div class="profile-info">
+            <mat-card-title>{{ currentUser?.firstName }} {{ currentUser?.lastName }}</mat-card-title>
+            <mat-card-subtitle>{{ currentUser?.username }}</mat-card-subtitle>
+          </div>
+        </div>
       </mat-card-header>
       <mat-card-content>
-        <div class="info-grid">
-          <div class="info-item">
-            <span class="label">Email:</span>
-            <span class="value">{{ currentUser?.email }}</span>
+        <div class="profile-details">
+          <div class="detail-item">
+            <mat-icon>military_tech</mat-icon>
+            <div>
+              <span class="detail-label">Level</span>
+              <span class="detail-value">{{ currentUser?.level || 1 }}</span>
+            </div>
           </div>
-          <div class="info-item">
-            <span class="label">Username:</span>
-            <span class="value">{{ currentUser?.username }}</span>
+          <div class="detail-item">
+            <mat-icon>stars</mat-icon>
+            <div>
+              <span class="detail-label">Total XP</span>
+              <span class="detail-value">{{ currentUser?.totalXp || 0 }}</span>
+            </div>
           </div>
-          <div class="info-item">
-            <span class="label">Level:</span>
-            <span class="value">{{ currentUser?.level }}</span>
+          <div class="detail-item">
+            <mat-icon>local_fire_department</mat-icon>
+            <div>
+              <span class="detail-label">Current Streak</span>
+              <span class="detail-value">{{ getStreakText(currentUser?.currentStreak || 0) }}</span>
+            </div>
           </div>
-          <div class="info-item">
-            <span class="label">Total XP:</span>
-            <span class="value">{{ currentUser?.totalXp }}</span>
-          </div>
-          <div class="info-item">
-            <span class="label">Current Streak:</span>
-            <span class="value">{{ currentUser?.currentStreak }} days 🔥</span>
-          </div>
-          <div class="info-item">
-            <span class="label">Longest Streak:</span>
-            <span class="value">{{ currentUser?.longestStreak }} days 🏆</span>
+          <div class="detail-item">
+            <mat-icon>emoji_events</mat-icon>
+            <div>
+              <span class="detail-label">Best Streak</span>
+              <span class="detail-value">{{ getStreakText(currentUser?.longestStreak || 0) }}</span>
+            </div>
           </div>
         </div>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="coming-soon-card">
+    <!-- Today's Habits -->
+    <mat-card class="habits-card" *ngIf="todayHabits.length > 0">
       <mat-card-header>
-        <mat-card-title>🚀 Coming Soon</mat-card-title>
+        <mat-card-title>
+          <mat-icon>today</mat-icon>
+          Today's Habits
+        </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <ul>
-          <li>✅ Create and manage habits</li>
-          <li>📊 Track your progress with charts</li>
-          <li>🏆 Unlock achievements</li>
-          <li>🔗 GitHub integration</li>
-          <li>👥 Leaderboard with friends</li>
-        </ul>
+        <div class="habits-list">
+          <div *ngFor="let habit of todayHabits" class="habit-item">
+            <div class="habit-icon" [style.background-color]="habit.color || categoryColors[habit.category] + '20'">
+              <span>{{ habit.icon || categoryIcons[habit.category] }}</span>
+            </div>
+            <div class="habit-info">
+              <h4>{{ habit.name }}</h4>
+              <p class="habit-meta">
+                <mat-icon>local_fire_department</mat-icon>
+                {{ habit.currentStreak }} day streak
+                <span *ngIf="isHabitAtRisk(habit)" class="at-risk-badge">
+                  <mat-icon>warning</mat-icon>
+                  At Risk
+                </span>
+              </p>
+            </div>
+            <button mat-icon-button color="primary" matTooltip="Mark as complete">
+              <mat-icon>check_circle_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Habits At Risk -->
+    <mat-card class="habits-card alert-card" *ngIf="streakAtRiskHabits.length > 0">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>warning</mat-icon>
+          Streaks At Risk
+        </mat-card-title>
+        <mat-card-subtitle>Complete these to maintain your streaks!</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="habits-list">
+          <div *ngFor="let habit of streakAtRiskHabits" class="habit-item at-risk">
+            <div class="habit-icon" [style.background-color]="habit.color || categoryColors[habit.category] + '20'">
+              <span>{{ habit.icon || categoryIcons[habit.category] }}</span>
+            </div>
+            <div class="habit-info">
+              <h4>{{ habit.name }}</h4>
+              <p class="habit-meta">
+                <mat-icon>local_fire_department</mat-icon>
+                {{ habit.currentStreak }} day streak
+              </p>
+            </div>
+            <button mat-raised-button color="warn" size="small">
+              Complete Now
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Empty State for No Habits -->
+    <mat-card class="empty-state-card" *ngIf="stats?.totalHabits === 0">
+      <mat-card-content>
+        <mat-icon>add_circle_outline</mat-icon>
+        <h3>No Habits Yet</h3>
+        <p>Start building better habits today!</p>
+        <button mat-raised-button color="primary">
+          <mat-icon>add</mat-icon>
+          Create Your First Habit
+        </button>
       </mat-card-content>
     </mat-card>
   </div>

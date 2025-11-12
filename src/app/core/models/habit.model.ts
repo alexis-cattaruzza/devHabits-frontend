@@ -14,6 +14,13 @@ export enum HabitFrequency {
   CUSTOM = 'CUSTOM'
 }
 
+export enum GitHubEventType {
+  COMMIT = 'COMMIT',
+  PULL_REQUEST = 'PULL_REQUEST',
+  CODE_REVIEW = 'CODE_REVIEW',
+  ISSUE = 'ISSUE'
+}
+
 export interface Habit {
   id: string;
   name: string;
@@ -25,6 +32,8 @@ export interface Habit {
   color?: string;
   reminderEnabled: boolean;
   reminderTime?: string;
+  githubAutoTrack?: boolean;
+  githubEventType?: GitHubEventType;
   currentStreak: number;
   longestStreak: number;
   totalCompletions: number;
@@ -55,6 +64,8 @@ export interface UpdateHabitRequest {
   color?: string;
   reminderEnabled?: boolean;
   reminderTime?: string;
+  githubAutoTrack?: boolean;
+  githubEventType?: GitHubEventType;
 }
 
 export interface CheckInRequest {

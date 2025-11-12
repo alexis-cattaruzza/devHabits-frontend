@@ -1,0 +1,16 @@
+<div class="callback-container">
+  <div class="callback-card">
+    <div *ngIf="loading && !error" class="loading-state">
+      <mat-spinner diameter="50"></mat-spinner>
+      <h2>Connecting to GitHub...</h2>
+      <p>Please wait while we complete the connection.</p>
+    </div>
+
+    <div *ngIf="error" class="error-state">
+      <mat-icon color="warn">error</mat-icon>
+      <h2>Connection Failed</h2>
+      <p>{{ error }}</p>
+      <p class="redirect-message">Redirecting to dashboard in 3 seconds...</p>
+    </div>
+  </div>
+</div>

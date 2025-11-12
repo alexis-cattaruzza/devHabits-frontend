@@ -1,0 +1,179 @@
+<div class="github-settings-container">
+  <div class="settings-header">
+    <h1>GitHub Integration</h1>
+    <p>Connect your GitHub account to automatically track coding habits</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loadingConnection" class="loading-section">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading GitHub connection...</p>
+  </div>
+
+  <!-- Not Connected State -->
+  <mat-card *ngIf="!loadingConnection && !connection" class="connection-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>code</mat-icon>
+      <mat-card-title>Connect GitHub</mat-card-title>
+      <mat-card-subtitle>Enable automatic habit tracking from your GitHub activity</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="benefits-list">
+        <div class="benefit-item">
+          <mat-icon>check_circle</mat-icon>
+          <span>Auto-complete habits when you push commits</span>
+        </div>
+        <div class="benefit-item">
+          <mat-icon>check_circle</mat-icon>
+          <span>Track pull requests and code reviews</span>
+        </div>
+        <div class="benefit-item">
+          <mat-icon>check_circle</mat-icon>
+          <span>Monitor issue creation and resolution</span>
+        </div>
+        <div class="benefit-item">
+          <mat-icon>check_circle</mat-icon>
+          <span>Choose which repositories to track</span>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="connectGitHub()">
+        <mat-icon>link</mat-icon>
+        Connect GitHub Account
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- Connected State -->
+  <div *ngIf="!loadingConnection && connection" class="connected-section">
+    <!-- Connection Status -->
+    <mat-card class="profile-card">
+      <mat-card-header>
+        <img mat-card-avatar [src]="connection.githubAvatarUrl" [alt]="connection.githubUsername">
+        <mat-card-title>{{ connection.githubUsername }}</mat-card-title>
+        <mat-card-subtitle>{{ connection.githubEmail }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="connection-info">
+          <div class="info-item">
+            <mat-icon>schedule</mat-icon>
+            <span>Connected: {{ formatDate(connection.connectedAt) }}</span>
+          </div>
+          <div class="info-item" *ngIf="connection.lastSyncedAt">
+            <mat-icon>sync</mat-icon>
+            <span>Last synced: {{ formatDate(connection.lastSyncedAt) }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="warn" (click)="disconnectGitHub()">
+          <mat-icon>link_off</mat-icon>
+          Disconnect
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Repositories Section -->
+    <mat-card class="repositories-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>folder</mat-icon>
+        <mat-card-title>Your Repositories</mat-card-title>
+        <mat-card-subtitle>Choose which repositories to track for automatic habit completion</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="repositories-actions">
+          <button mat-raised-button (click)="syncRepositories()" [disabled]="syncing">
+            <mat-icon>sync</mat-icon>
+            {{ syncing ? 'Syncing...' : 'Sync Repositories' }}
+          </button>
+        </div>
+
+        <div *ngIf="loadingRepositories" class="loading-section">
+          <mat-spinner diameter="30"></mat-spinner>
+          <p>Loading repositories...</p>
+        </div>
+
+        <div *ngIf="!loadingRepositories && repositories.length === 0" class="empty-state">
+          <mat-icon>inbox</mat-icon>
+          <p>No repositories found</p>
+          <button mat-button color="primary" (click)="syncRepositories()">Sync Now</button>
+        </div>
+
+        <div *ngIf="!loadingRepositories && repositories.length > 0" class="repositories-list">
+          <mat-list>
+            <mat-list-item *ngFor="let repo of repositories" class="repo-item">
+              <mat-icon matListItemIcon [class.private]="repo.isPrivate">
+                {{ repo.isPrivate ? 'lock' : 'folder_open' }}
+              </mat-icon>
+              <div matListItemTitle class="repo-title">
+                <strong>{{ repo.repositoryName }}</strong>
+                <mat-chip *ngIf="repo.language" class="language-chip">{{ repo.language }}</mat-chip>
+              </div>
+              <div matListItemLine class="repo-description">
+                {{ repo.description || 'No description' }}
+              </div>
+              <div matListItemMeta>
+                <mat-slide-toggle
+                  [checked]="repo.isTracked"
+                  (change)="toggleRepositoryTracking(repo)"
+                  color="primary">
+                  {{ repo.isTracked ? 'Tracking' : 'Not tracking' }}
+                </mat-slide-toggle>
+              </div>
+            </mat-list-item>
+          </mat-list>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Recent Events Section -->
+    <mat-card class="events-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>history</mat-icon>
+        <mat-card-title>Recent GitHub Activity</mat-card-title>
+        <mat-card-subtitle>Habit completions triggered by GitHub events (last 7 days)</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="loadingEvents" class="loading-section">
+          <mat-spinner diameter="30"></mat-spinner>
+          <p>Loading events...</p>
+        </div>
+
+        <div *ngIf="!loadingEvents && recentEvents.length === 0" class="empty-state">
+          <mat-icon>event_note</mat-icon>
+          <p>No recent GitHub events</p>
+          <small>Start pushing code, creating PRs, or reviewing code to see activity here</small>
+        </div>
+
+        <div *ngIf="!loadingEvents && recentEvents.length > 0" class="events-list">
+          <mat-list>
+            <mat-list-item *ngFor="let event of recentEvents" class="event-item">
+              <mat-icon matListItemIcon [class]="'event-icon-' + event.eventType">
+                {{ getEventIcon(event.eventType) }}
+              </mat-icon>
+              <div matListItemTitle>
+                <strong>{{ eventTypeLabels[event.eventType] }}</strong>
+              </div>
+              <div matListItemLine class="event-details">
+                <span class="repo-name">{{ event.repositoryName }}</span>
+                <span class="event-message" *ngIf="event.commitMessage">
+                  {{ event.commitMessage | slice:0:60 }}{{ event.commitMessage.length > 60 ? '...' : '' }}
+                </span>
+                <span class="event-message" *ngIf="event.pullRequestTitle">
+                  PR #{{ event.pullRequestNumber }}: {{ event.pullRequestTitle | slice:0:60 }}
+                </span>
+                <span class="event-message" *ngIf="event.issueTitle">
+                  Issue #{{ event.issueNumber }}: {{ event.issueTitle | slice:0:60 }}
+                </span>
+              </div>
+              <div matListItemMeta class="event-date">
+                {{ formatDate(event.createdAt) }}
+              </div>
+            </mat-list-item>
+          </mat-list>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
