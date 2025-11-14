@@ -1,8 +1,13 @@
-// src/environments/environment.prod.ts
+// Production environment configuration
+// SECURITY: Set actual production values before deployment
 export const environment = {
   production: true,
-  apiUrl: 'https://api.devhabits.com/api',
+  apiUrl: 'http://devhabits-app.eba-sic2zhmq.eu-central-1.elasticbeanstalk.com/api',
+  backendUrl: 'http://devhabits-app.eba-sic2zhmq.eu-central-1.elasticbeanstalk.com',
+  frontendUrl: 'http://devhabits-frontend-app.s3-website.eu-central-1.amazonaws.com',
   tokenKey: 'devhabits_access_token',
   refreshTokenKey: 'devhabits_refresh_token',
-  githubClientId: 'your-production-github-client-id' // Replace with production GitHub OAuth App Client ID
+  // GitHub OAuth Production credentials
+  githubClientId: 'Ov23lisyI8RfWwVTkopv',
+  githubRedirectUri: 'http://devhabits-frontend-app.s3-website.eu-central-1.amazonaws.com/github/callback'
 };

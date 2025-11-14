@@ -133,7 +133,8 @@ export class GitHubService {
    */
   getAuthorizationUrl(): string {
     const clientId = environment.githubClientId;
-    const redirectUri = `${window.location.origin}/github/callback`;
+    // Use configured GitHub redirect URI from environment
+    const redirectUri = environment.githubRedirectUri;
     const scope = 'user:email read:user repo';
 
     return `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}`;
