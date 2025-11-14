@@ -83,11 +83,11 @@
             "production": {
               "buildTarget": "devhabits-frontend:build:production"
             },
-            "development": {
-              "buildTarget": "devhabits-frontend:build:development"
+            "local": {
+              "buildTarget": "devhabits-frontend:build:local"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "local"
         }
       }
     }
